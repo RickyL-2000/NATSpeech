@@ -8,10 +8,10 @@ import importlib
 
 def run_task():
     assert hparams['task_cls'] != ''
-    pkg = ".".join(hparams["task_cls"].split(".")[:-1])
-    cls_name = hparams["task_cls"].split(".")[-1]
+    pkg = ".".join(hparams["task_cls"].split(".")[:-1])     # the package name before the class name
+    cls_name = hparams["task_cls"].split(".")[-1]           # the class name
     task_cls = getattr(importlib.import_module(pkg), cls_name)
-    task_cls.start()
+    task_cls.start()    # call the original BaseTask.start()
 
 
 if __name__ == '__main__':

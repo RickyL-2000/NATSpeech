@@ -204,7 +204,7 @@ class Trainer:
         if max_batches == -1:
             max_batches = None
         # enable eval mode
-        task.zero_grad()
+        task.zero_grad()    # because BaseTask inherit nn.Module, zero_grad() works
         task.eval()
         torch.set_grad_enabled(False)
 
