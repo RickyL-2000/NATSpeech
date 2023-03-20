@@ -1,26 +1,26 @@
 ### Project ignore
 
-/checkpoints/*
-!/checkpoints/.gitkeep
-/data/*
-!/data/.gitkeep
-infer_out
+/ParallelWaveGAN
+/wavegan_pretrained*
+/pretrained_models
 rsync
 .idea
 .DS_Store
 bak
 tmp
 *.tar.gz
+# mfa and kaldi
+kaldi_align/exp
+mfa
+montreal-forced-aligner
 mos
 nbs
 /configs_usr/*
 !/configs_usr/.gitkeep
-/egs_usr/*
-!/egs_usr/.gitkeep
+/fast_transformers
 /rnnoise
-#/usr/*
-#!/usr/.gitkeep
-scripts_usr
+/usr/*
+!/usr/.gitkeep
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template

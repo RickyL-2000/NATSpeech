@@ -5,15 +5,15 @@ import re
 import traceback
 from collections import Counter
 from functools import partial
-
+import pandas as pd
 import librosa
 from tqdm import tqdm
 from data_gen.tts.txt_processors.base_text_processor import get_txt_processor_cls
 from data_gen.tts.wav_processors.base_processor import get_wav_processor_cls
-from utils.commons.hparams import hparams
-from utils.commons.multiprocess_utils import multiprocess_run_tqdm
+from utils.hparams import hparams
+from utils.multiprocess_utils import multiprocess_run_tqdm
 from utils.os_utils import link_file, move_file, remove_file
-from utils.text.text_encoder import is_sil_phoneme, build_token_encoder
+from data_gen.tts.data_gen_utils import is_sil_phoneme, build_token_encoder
 
 
 class BasePreprocessor:
@@ -27,7 +27,6 @@ class BasePreprocessor:
 
     def meta_data(self):
         """
-
         :return: {'item_name': Str, 'wav_fn': Str, 'txt': Str, 'spk_name': Str, 'txt_loader': None or Func}
         """
         raise NotImplementedError
@@ -111,7 +110,13 @@ class BasePreprocessor:
                 f.writelines([f'{l}\n' for l in mfa_dict])
         with open(f"{processed_dir}/{self.meta_csv_filename}.json", 'w') as f:
             f.write(re.sub(r'\n\s+([\d+\]])', r'\1', json.dumps(items, ensure_ascii=False, sort_keys=False, indent=1)))
+
+        # save to csv
+        meta_df = pd.DataFrame(items)
+        meta_df.to_csv(f"{processed_dir}/metadata_phone.csv")
+
         remove_file(wav_processed_tmp_dir)
+
 
     @classmethod
     def preprocess_first_pass(cls, item_name, txt_raw, txt_processor,
@@ -169,7 +174,10 @@ class BasePreprocessor:
                     input_fn, sr, output_fn_for_align = outputs
                 else:
                     input_fn, sr = outputs
-            return input_fn, output_fn_for_align
+            if output_fn_for_align is None:
+                return input_fn, input_fn
+            else:
+                return input_fn, output_fn_for_align
         else:
             return wav_fn, wav_fn
 

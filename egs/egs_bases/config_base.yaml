@@ -1,18 +1,23 @@
 # task
 binary_data_dir: ''
 work_dir: '' # experiment directory.
-infer: false # infer
+infer: false # inference
 amp: false
 seed: 1234
 debug: false
-save_codes: ['tasks', 'modules', 'egs']
+save_codes: []
+#  - configs
+#  - modules
+#  - tasks
+#  - utils
+#  - usr
 
 #############
 # dataset
 #############
 ds_workers: 1
 test_num: 100
-endless_ds: true
+endless_ds: false
 sort_by_len: true
 
 #########
@@ -20,7 +25,7 @@ sort_by_len: true
 #########
 print_nan_grads: false
 load_ckpt: ''
-save_best: false
+save_best: true
 num_ckpt_keep: 3
 clip_grad_norm: 0
 accumulate_grad_batches: 1
@@ -32,10 +37,10 @@ valid_monitor_key: 'val_loss'
 valid_monitor_mode: 'min'
 max_epochs: 1000
 max_updates: 1000000
-max_tokens: 40000
+max_tokens: 31250
 max_sentences: 100000
 max_valid_tokens: -1
 max_valid_sentences: -1
-eval_max_batches: -1
+test_input_dir: ''
 resume_from_checkpoint: 0
 rename_tmux: true

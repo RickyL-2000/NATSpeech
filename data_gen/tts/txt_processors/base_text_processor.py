@@ -1,7 +1,6 @@
-from utils.text.text_encoder import is_sil_phoneme
+from data_gen.tts.data_gen_utils import is_sil_phoneme
 
 REGISTERED_TEXT_PROCESSORS = {}
-
 
 def register_txt_processors(name):
     def _f(cls):
