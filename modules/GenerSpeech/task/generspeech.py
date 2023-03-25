@@ -35,6 +35,7 @@ class GenerSpeechTask(FastSpeech2Task):
         if hparams['load_ckpt'] != '':
             self.load_ckpt(hparams['load_ckpt'], strict=False)
         utils.num_params(self.model)
+        # utils.print_arch(self.model)
         return self.model
 
     def run_model(self, model, sample, return_output=False):
@@ -78,11 +79,11 @@ class GenerSpeechTask(FastSpeech2Task):
         encdec_attn = model_out['select_attn']
         mel_out = self.model.out2mel(model_out['mel_out'])
         outputs = utils.tensors_to_scalars(outputs)
-        if self.global_step % hparams['valid_infer_interval'] == 0 \
+        if self.global_step % hparams['val_check_interval'] == 0 \
                 and batch_idx < hparams['num_valid_plots']:
             vmin = hparams['mel_vmin']
             vmax = hparams['mel_vmax']
-            self.plot_mel(batch_idx, sample['mels'], mel_out)
+            self.plot_mel(batch_idx, sample['mels'], mel_out, f'mel_pair_{batch_idx}')  # this is decoder output
             self.plot_dur(batch_idx, sample, model_out)
             if hparams['use_pitch_embed']:
                 self.plot_pitch(batch_idx, sample, model_out)
@@ -113,10 +114,10 @@ class GenerSpeechTask(FastSpeech2Task):
                 wav_pred = self.vocoder.spec2wav(model_out['mel_out'][0].cpu())
                 self.logger.add_audio(f'wav_{batch_idx}', wav_pred, self.global_step, hparams['audio_sample_rate'])
             # gt wav
-            if self.global_step <= hparams['valid_infer_interval']:
+            if self.global_step % hparams['valid_infer_interval'] == 0:
                 mel_gt = sample['mels'][0].cpu()
                 wav_gt = self.vocoder.spec2wav(mel_gt)
-                self.logger.add_audio(f'wav_gt_{batch_idx}', wav_gt, self.global_step, 22050)
+                self.logger.add_audio(f'wav_gt_{batch_idx}', wav_gt, self.global_step, hparams['audio_sample_rate'])
         return outputs
 
     ############

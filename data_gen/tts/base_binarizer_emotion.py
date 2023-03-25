@@ -49,11 +49,21 @@ class EmotionBinarizer:
                 self.item2txt[item_name] = r['txt']
                 self.item2ph[item_name] = r['ph']
                 self.item2wavfn[item_name] = r['wav_fn']
-                self.item2spk[item_name] = r.get('spk_name', 'SPK1') \
-                    if self.binarization_args['with_spk_id'] else 'SPK1'
+                spk = r.get('spk_name', '')
+                if spk == '':
+                    spk = r.get('spk', '')
+                if spk == '' or not self.binarization_args['with_spk_id']:
+                    spk = 'SPK1'
+                self.item2spk[item_name] = spk
+                # self.item2spk[item_name] = r.get('spk_name', 'SPK1') \
+                #     if self.binarization_args['with_spk_id'] else 'SPK1'
                 if len(self.processed_data_dirs) > 1:
                     self.item2spk[item_name] = f"ds{ds_id}_{self.item2spk[item_name]}"
                 self.item2tgfn[item_name] = f"{processed_data_dir}/mfa_outputs/{raw_item_name}.TextGrid"
+                # emo = r.get('others', "Neutral")
+                # if emo == '{}':
+                #     emo = "Neutral"
+                # self.item2emo[item_name] = emo
                 self.item2emo[item_name] = r.get('others', '"Neutral"')
         self.item_names = sorted(list(self.item2txt.keys()))
         if self.binarization_args['shuffle']:

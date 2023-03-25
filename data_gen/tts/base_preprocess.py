@@ -62,6 +62,8 @@ class BasePreprocessor:
             'others': item_raw.get('others', None)
         } for item_raw in meta_data]
         for item_, (item_id, item) in zip(meta_data, multiprocess_run_tqdm(process_item, args, desc='Preprocess')):
+        # for item_id, item_ in enumerate(meta_data):     # ## FOR
+        #     item = process_item(**args[item_id])        # ## DEBUG
             if item is not None:
                 item_.update(item)
                 item = item_
@@ -102,6 +104,8 @@ class BasePreprocessor:
             } for item, mfa_group in zip(items, mfa_groups)]
             for i, (ph_gb_word_nosil, new_wav_align_fn) in multiprocess_run_tqdm(
                     self.build_mfa_inputs, args, desc='Build MFA data'):
+            # for i in range(len(args)):                                                      # ## FOR
+            #     ph_gb_word_nosil, new_wav_align_fn = self.build_mfa_inputs(**args[i])       # ## DEBUG
                 items[i]['wav_align_fn'] = new_wav_align_fn
                 for w in ph_gb_word_nosil.split(" "):
                     mfa_dict.add(f"{w} {w.replace('_', ' ')}")

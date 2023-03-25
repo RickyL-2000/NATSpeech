@@ -1,12 +1,13 @@
 import os
 
+from utils.hparams import hparams, set_hparams
 from data_gen.tts.base_preprocess import BasePreprocessor
 import glob
 
 
 class LibrittsPreAlign(BasePreprocessor):
     def meta_data(self):
-        wav_fns = sorted(glob.glob(f'{self.raw_data_dir}/*/*/*.wav'))
+        wav_fns = sorted(glob.glob(f'{self.raw_data_dir}/*/*/*.wav') + glob.glob(f'{self.raw_data_dir}/*/*/*/*.wav'))
         for wav_fn in wav_fns:
             item_name = os.path.basename(wav_fn)[:-4]
             txt_fn = f'{wav_fn[:-4]}.normalized.txt'
@@ -24,4 +25,5 @@ class LibrittsPreAlign(BasePreprocessor):
 
 
 if __name__ == "__main__":
+    set_hparams()
     LibrittsPreAlign().process()

@@ -75,3 +75,11 @@ class TxtProcessor(BaseTxtProcessor):
                 txt_struct[i_word][1].append(p)
         txt_struct = cls.postprocess(txt_struct, preprocess_args)
         return txt_struct, txt
+
+if __name__ == '__main__':
+    t = 'I have bunburyed, all over goat on two separate occasions.'
+    pre_align_args = {'with_phsep': True, 'add_eos_bos': True}
+    # phs, txt = TxtProcessor.process('他来到了，网易杭研大厦', {'use_tone': True})
+    # phs, txt = TxtProcessor.process('我明白太放不开你的爱', pre_align_args)
+    phs, txt = TxtProcessor.process(t, pre_align_args)
+    print(phs, txt)
